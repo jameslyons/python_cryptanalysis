@@ -1,11 +1,11 @@
-from pycipher import SimpleSub
+from pycipher import SimpleSubstitution as SimpleSub
 import random
-from ScoreText import ScoreText
 import re
+from ngram_score import ngram_score
+fitness = ngram_score('quadgrams.txt') # load our quadgram statistics
 
 ctext='pmpafxaikkitprdsikcplifhwceigixkirradfeirdgkipgigudkcekiigpwrpucikceiginasikwduearrxiiqepcceindgmieinpwdfprduppcedoikiqiasafmfddfipfgmdafmfdteiki'
 ctext = re.sub('[^A-Z]','',ctext.upper())
-scoreText = ScoreText() # load our quadgram model
 
 maxkey = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 maxscore = -99e9
@@ -18,7 +18,7 @@ while 1:
     i = i+1
     random.shuffle(parentkey)
     deciphered = SimpleSub(parentkey).decipher(ctext)
-    parentscore = scoreText.qgram(deciphered)
+    parentscore = fitness.score(deciphered)
     count = 0
     while count < 1000:
         a = random.randint(0,25)
@@ -27,7 +27,7 @@ while 1:
         # swap two characters in the child
         child[a],child[b] = child[b],child[a]
         deciphered = SimpleSub(child).decipher(ctext)
-        score = scoreText.qgram(deciphered)
+        score = fitness.score(deciphered)
         # if the child was better, replace the parent with it
         if score > parentscore:
             parentscore = score
