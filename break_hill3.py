@@ -1,3 +1,5 @@
+# this code breaks 3by3 hill ciphers fairly efficiently. 
+
 from itertools import product
 from ngram_score import ngram_score
 L2I = dict(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ",range(26)))
