@@ -1,0 +1,58 @@
+from sortedcontainers import SortedList
+import time 
+from mat_rnn2 import rnn
+
+strs = ['RNUSSLSTGNNZOMSOMSNMTAOOKPPSXWNLTC',
+'RNYSSCSTGNNZOMOOMONMTAOSKPXSXKNLTC',
+'ROPSSLSRRNPPOOHOOHNOIANTKNZSZMNODC',
+'ROXSSCSRINPXOOMOOMNORANTKNZSZHNOQC',
+'RPOSQNSRRNPPONIONINOIAOSKPXSWPNODC',
+'RPSSQNSRINPXONRONRNORAOOKPPSWXNOQC',
+'RNUSOLSTGNNZOHSOHSNHTASOKXPSPWNCTC',
+'RNYSOCSTGNNZOHOOHONHTASSKXXSPKNCTC',
+'ROPSNQSRRNPPOINOINNIOASOKXPSPWNDOC',
+'ROXSNDSRINPXOINOINNISASSKXXSPKNDSC',
+'RPOSLSSRRNPPOHOOHONIOATNKZNSMZNDOC',
+'RPSSLOSRINPXOHSOHSNISATNKZNSMZNDSC',
+'RSPSOLSIRNXPOSHOSHNSIANTKNZSZMNSDC',
+'RSXSOCSIINXXOSMOSMNSRANTKNZSZHNSQC',
+'RSPSNQSIRNXPORNORNNROAOOKPPSXWNQOC',
+'RSXSNDSIINXXORNORNNRSAOSKPXSXKNQSC',
+'RUNSLSSGTNZNOSMOSMNTMAOOKPPSWXNTLC',
+'RUNSLOSGTNZNOSHOSHNTHAOSKPXSWPNTCC',
+'RXOSDNSIRNXPONIONINSIASSKXXSKPNSDC',
+'RXSSDNSIINXXONRONRNSRASOKXPSKXNSQC',
+'RXOSCSSIRNXPOMOOMONROATNKZNSHZNQOC',
+'RXSSCOSIINXXOMSOMSNRSATNKZNSHZNQSC',
+'RYNSCSSGTNZNOOMOOMNTMASOKXPSKXNTLC',
+'RYNSCOSGTNZNOOHOOHNTHASSKXXSKPNTCC']
+
+def rev(st):
+    temp = list(st)
+    temp.reverse()
+    return ''.join(temp)
+    
+rstrs = [rev(s) for s in strs]
+strs = strs + rstrs
+
+from word_score import word_score
+fitness = word_score()
+
+r = rnn()
+
+for count,string in enumerate(strs):
+    fname = "bstr%d.txt" % count
+    print 'working on '+fname + ' - ' + time.asctime()
+    fw = open(fname,'wb')
+    res = r.solve(string,N=20000)
+    res2 = []
+    for score,text in res:
+        f = fitness.score(text)
+        res2.append((f[0],' '.join(f[1]),text,score))
+    res2.sort() 
+    for i in res2:
+        fw.write(str(i)+'\n')
+        last = str(i)
+    fw.close()
+    print last
+
